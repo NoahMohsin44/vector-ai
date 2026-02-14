@@ -1,0 +1,708 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 7%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 7%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 4%;
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 55%;
+    --accent: 0 0% 12%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14%;
+    --input: 0 0% 14%;
+    --ring: 0 0% 98%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Custom scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(0 0% 7%);
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(0 0% 20%);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(0 0% 30%);
+}
+
+/* Electron specific - remove drag on window */
+body {
+  -webkit-app-region: no-drag;
+  user-select: none;
+}
+
+/* Draggable title bar region */
+.titlebar {
+  -webkit-app-region: drag;
+}
+
+.titlebar button,
+.titlebar a,
+.titlebar input {
+  -webkit-app-region: no-drag;
+}
+
+/* Allow text selection in inputs */
+input, textarea {
+  user-select: text;
+}
+
+/* Smooth entrance animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-stagger-1 { animation-delay: 0.1s; opacity: 0; }
+.animate-stagger-2 { animation-delay: 0.2s; opacity: 0; }
+.animate-stagger-3 { animation-delay: 0.3s; opacity: 0; }
+.animate-stagger-4 { animation-delay: 0.4s; opacity: 0; }
+.animate-stagger-5 { animation-delay: 0.5s; opacity: 0; }
+
+/* Smooth hover transitions */
+.transition-smooth {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Card hover effect */
+.card-hover {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Button press effect */
+.btn-press:active {
+  transform: scale(0.98);
+}
+
+/* Nav item slide animation */
+.nav-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-item::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background: currentColor;
+  transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-item:hover::after {
+  width: 100%;
+}
+
+/* Loading skeleton shimmer */
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--muted)) 25%,
+    hsl(var(--muted-foreground) / 0.1) 50%,
+    hsl(var(--muted)) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Ripple Effect - Grid Wave */
+.ripple-container {
+  position: absolute;
+  width: 120%;
+  height: 120%;
+  left: -10%;
+  top: -10%;
+  display: grid;
+  grid-template-columns: repeat(80, 1fr);
+  grid-template-rows: repeat(50, 1fr);
+  gap: 1px;
+}
+
+.ripple {
+  width: 100%;
+  height: 100%;
+  background-color: hsl(var(--border) / 0.12);
+  animation: grid-wave 6s ease-in-out infinite;
+}
+
+/* Diagonal wave pattern - delays increase across grid */
+.ripple-1, .ripple-81, .ripple-161, .ripple-241, .ripple-321 { animation-delay: 0.0s; }
+.ripple-2, .ripple-82, .ripple-162, .ripple-242, .ripple-322 { animation-delay: 0.05s; }
+.ripple-3, .ripple-83, .ripple-163, .ripple-243, .ripple-323 { animation-delay: 0.1s; }
+.ripple-4, .ripple-84, .ripple-164, .ripple-244, .ripple-324 { animation-delay: 0.15s; }
+.ripple-5, .ripple-85, .ripple-165, .ripple-245, .ripple-325 { animation-delay: 0.2s; }
+.ripple-6, .ripple-86, .ripple-166, .ripple-246, .ripple-326 { animation-delay: 0.25s; }
+.ripple-7, .ripple-87, .ripple-167, .ripple-247, .ripple-327 { animation-delay: 0.3s; }
+.ripple-8, .ripple-88, .ripple-168, .ripple-248, .ripple-328 { animation-delay: 0.35s; }
+.ripple-9, .ripple-89, .ripple-169, .ripple-249, .ripple-329 { animation-delay: 0.4s; }
+.ripple-10, .ripple-90, .ripple-170, .ripple-250, .ripple-330 { animation-delay: 0.45s; }
+.ripple-11, .ripple-91, .ripple-171, .ripple-251, .ripple-331 { animation-delay: 0.5s; }
+.ripple-12, .ripple-92, .ripple-172, .ripple-252, .ripple-332 { animation-delay: 0.55s; }
+.ripple-13, .ripple-93, .ripple-173, .ripple-253, .ripple-333 { animation-delay: 0.6s; }
+.ripple-14, .ripple-94, .ripple-174, .ripple-254, .ripple-334 { animation-delay: 0.65s; }
+.ripple-15, .ripple-95, .ripple-175, .ripple-255, .ripple-335 { animation-delay: 0.7s; }
+.ripple-16, .ripple-96, .ripple-176, .ripple-256, .ripple-336 { animation-delay: 0.75s; }
+.ripple-17, .ripple-97, .ripple-177, .ripple-257, .ripple-337 { animation-delay: 0.8s; }
+.ripple-18, .ripple-98, .ripple-178, .ripple-258, .ripple-338 { animation-delay: 0.85s; }
+.ripple-19, .ripple-99, .ripple-179, .ripple-259, .ripple-339 { animation-delay: 0.9s; }
+.ripple-20, .ripple-100, .ripple-180, .ripple-260, .ripple-340 { animation-delay: 0.95s; }
+.ripple-21, .ripple-101, .ripple-181, .ripple-261, .ripple-341 { animation-delay: 1.0s; }
+.ripple-22, .ripple-102, .ripple-182, .ripple-262, .ripple-342 { animation-delay: 1.05s; }
+.ripple-23, .ripple-103, .ripple-183, .ripple-263, .ripple-343 { animation-delay: 1.1s; }
+.ripple-24, .ripple-104, .ripple-184, .ripple-264, .ripple-344 { animation-delay: 1.15s; }
+.ripple-25, .ripple-105, .ripple-185, .ripple-265, .ripple-345 { animation-delay: 1.2s; }
+.ripple-26, .ripple-106, .ripple-186, .ripple-266, .ripple-346 { animation-delay: 1.25s; }
+.ripple-27, .ripple-107, .ripple-187, .ripple-267, .ripple-347 { animation-delay: 1.3s; }
+.ripple-28, .ripple-108, .ripple-188, .ripple-268, .ripple-348 { animation-delay: 1.35s; }
+.ripple-29, .ripple-109, .ripple-189, .ripple-269, .ripple-349 { animation-delay: 1.4s; }
+.ripple-30, .ripple-110, .ripple-190, .ripple-270, .ripple-350 { animation-delay: 1.45s; }
+.ripple-31, .ripple-111, .ripple-191, .ripple-271, .ripple-351 { animation-delay: 1.5s; }
+.ripple-32, .ripple-112, .ripple-192, .ripple-272, .ripple-352 { animation-delay: 1.55s; }
+.ripple-33, .ripple-113, .ripple-193, .ripple-273, .ripple-353 { animation-delay: 1.6s; }
+.ripple-34, .ripple-114, .ripple-194, .ripple-274, .ripple-354 { animation-delay: 1.65s; }
+.ripple-35, .ripple-115, .ripple-195, .ripple-275, .ripple-355 { animation-delay: 1.7s; }
+.ripple-36, .ripple-116, .ripple-196, .ripple-276, .ripple-356 { animation-delay: 1.75s; }
+.ripple-37, .ripple-117, .ripple-197, .ripple-277, .ripple-357 { animation-delay: 1.8s; }
+.ripple-38, .ripple-118, .ripple-198, .ripple-278, .ripple-358 { animation-delay: 1.85s; }
+.ripple-39, .ripple-119, .ripple-199, .ripple-279, .ripple-359 { animation-delay: 1.9s; }
+.ripple-40, .ripple-120, .ripple-200, .ripple-280, .ripple-360 { animation-delay: 1.95s; }
+.ripple-41, .ripple-121, .ripple-201, .ripple-281, .ripple-361 { animation-delay: 2.0s; }
+.ripple-42, .ripple-122, .ripple-202, .ripple-282, .ripple-362 { animation-delay: 2.05s; }
+.ripple-43, .ripple-123, .ripple-203, .ripple-283, .ripple-363 { animation-delay: 2.1s; }
+.ripple-44, .ripple-124, .ripple-204, .ripple-284, .ripple-364 { animation-delay: 2.15s; }
+.ripple-45, .ripple-125, .ripple-205, .ripple-285, .ripple-365 { animation-delay: 2.2s; }
+.ripple-46, .ripple-126, .ripple-206, .ripple-286, .ripple-366 { animation-delay: 2.25s; }
+.ripple-47, .ripple-127, .ripple-207, .ripple-287, .ripple-367 { animation-delay: 2.3s; }
+.ripple-48, .ripple-128, .ripple-208, .ripple-288, .ripple-368 { animation-delay: 2.35s; }
+.ripple-49, .ripple-129, .ripple-209, .ripple-289, .ripple-369 { animation-delay: 2.4s; }
+.ripple-50, .ripple-130, .ripple-210, .ripple-290, .ripple-370 { animation-delay: 2.45s; }
+.ripple-51, .ripple-131, .ripple-211, .ripple-291, .ripple-371 { animation-delay: 2.5s; }
+.ripple-52, .ripple-132, .ripple-212, .ripple-292, .ripple-372 { animation-delay: 2.55s; }
+.ripple-53, .ripple-133, .ripple-213, .ripple-293, .ripple-373 { animation-delay: 2.6s; }
+.ripple-54, .ripple-134, .ripple-214, .ripple-294, .ripple-374 { animation-delay: 2.65s; }
+.ripple-55, .ripple-135, .ripple-215, .ripple-295, .ripple-375 { animation-delay: 2.7s; }
+.ripple-56, .ripple-136, .ripple-216, .ripple-296, .ripple-376 { animation-delay: 2.75s; }
+.ripple-57, .ripple-137, .ripple-217, .ripple-297, .ripple-377 { animation-delay: 2.8s; }
+.ripple-58, .ripple-138, .ripple-218, .ripple-298, .ripple-378 { animation-delay: 2.85s; }
+.ripple-59, .ripple-139, .ripple-219, .ripple-299, .ripple-379 { animation-delay: 2.9s; }
+.ripple-60, .ripple-140, .ripple-220, .ripple-300, .ripple-380 { animation-delay: 2.95s; }
+.ripple-61, .ripple-141, .ripple-221, .ripple-301 { animation-delay: 3.0s; }
+.ripple-62, .ripple-142, .ripple-222, .ripple-302 { animation-delay: 3.05s; }
+.ripple-63, .ripple-143, .ripple-223, .ripple-303 { animation-delay: 3.1s; }
+.ripple-64, .ripple-144, .ripple-224, .ripple-304 { animation-delay: 3.15s; }
+.ripple-65, .ripple-145, .ripple-225, .ripple-305 { animation-delay: 3.2s; }
+.ripple-66, .ripple-146, .ripple-226, .ripple-306 { animation-delay: 3.25s; }
+.ripple-67, .ripple-147, .ripple-227, .ripple-307 { animation-delay: 3.3s; }
+.ripple-68, .ripple-148, .ripple-228, .ripple-308 { animation-delay: 3.35s; }
+.ripple-69, .ripple-149, .ripple-229, .ripple-309 { animation-delay: 3.4s; }
+.ripple-70, .ripple-150, .ripple-230, .ripple-310 { animation-delay: 3.45s; }
+.ripple-71, .ripple-151, .ripple-231, .ripple-311 { animation-delay: 3.5s; }
+.ripple-72, .ripple-152, .ripple-232, .ripple-312 { animation-delay: 3.55s; }
+.ripple-73, .ripple-153, .ripple-233, .ripple-313 { animation-delay: 3.6s; }
+.ripple-74, .ripple-154, .ripple-234, .ripple-314 { animation-delay: 3.65s; }
+.ripple-75, .ripple-155, .ripple-235, .ripple-315 { animation-delay: 3.7s; }
+.ripple-76, .ripple-156, .ripple-236, .ripple-316 { animation-delay: 3.75s; }
+.ripple-77, .ripple-157, .ripple-237, .ripple-317 { animation-delay: 3.8s; }
+.ripple-78, .ripple-158, .ripple-238, .ripple-318 { animation-delay: 3.85s; }
+.ripple-79, .ripple-159, .ripple-239, .ripple-319 { animation-delay: 3.9s; }
+.ripple-80, .ripple-160, .ripple-240, .ripple-320 { animation-delay: 3.95s; }
+
+@keyframes grid-wave {
+  0%, 100% {
+    opacity: 0.15;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.05);
+  }
+}
+
+.ripple-1  { animation-delay: 0.0s; }
+.ripple-2  { animation-delay: 0.1s; }
+.ripple-3  { animation-delay: 0.2s; }
+.ripple-4  { animation-delay: 0.3s; }
+.ripple-5  { animation-delay: 0.4s; }
+.ripple-6  { animation-delay: 0.5s; }
+.ripple-7  { animation-delay: 0.6s; }
+.ripple-8  { animation-delay: 0.7s; }
+.ripple-9  { animation-delay: 0.8s; }
+.ripple-10 { animation-delay: 0.9s; }
+.ripple-11 { animation-delay: 1.0s; }
+.ripple-12 { animation-delay: 1.1s; }
+.ripple-13 { animation-delay: 1.2s; }
+.ripple-14 { animation-delay: 1.3s; }
+.ripple-15 { animation-delay: 1.4s; }
+.ripple-16 { animation-delay: 1.5s; }
+.ripple-17 { animation-delay: 1.6s; }
+.ripple-18 { animation-delay: 1.7s; }
+.ripple-19 { animation-delay: 1.8s; }
+.ripple-20 { animation-delay: 1.9s; }
+.ripple-21 { animation-delay: 2.0s; }
+.ripple-22 { animation-delay: 2.1s; }
+.ripple-23 { animation-delay: 2.2s; }
+.ripple-24 { animation-delay: 2.3s; }
+.ripple-25 { animation-delay: 0.1s; }
+.ripple-26 { animation-delay: 0.2s; }
+.ripple-27 { animation-delay: 0.3s; }
+.ripple-28 { animation-delay: 0.4s; }
+.ripple-29 { animation-delay: 0.5s; }
+.ripple-30 { animation-delay: 0.6s; }
+.ripple-31 { animation-delay: 0.7s; }
+.ripple-32 { animation-delay: 0.8s; }
+.ripple-33 { animation-delay: 0.9s; }
+.ripple-34 { animation-delay: 1.0s; }
+.ripple-35 { animation-delay: 1.1s; }
+.ripple-36 { animation-delay: 1.2s; }
+.ripple-37 { animation-delay: 1.3s; }
+.ripple-38 { animation-delay: 1.4s; }
+.ripple-39 { animation-delay: 1.5s; }
+.ripple-40 { animation-delay: 1.6s; }
+.ripple-41 { animation-delay: 1.7s; }
+.ripple-42 { animation-delay: 1.8s; }
+.ripple-43 { animation-delay: 1.9s; }
+.ripple-44 { animation-delay: 2.0s; }
+.ripple-45 { animation-delay: 2.1s; }
+.ripple-46 { animation-delay: 2.2s; }
+.ripple-47 { animation-delay: 2.3s; }
+.ripple-48 { animation-delay: 2.4s; }
+.ripple-49 { animation-delay: 0.2s; }
+.ripple-50 { animation-delay: 0.3s; }
+.ripple-51 { animation-delay: 0.4s; }
+.ripple-52 { animation-delay: 0.5s; }
+.ripple-53 { animation-delay: 0.6s; }
+.ripple-54 { animation-delay: 0.7s; }
+.ripple-55 { animation-delay: 0.8s; }
+.ripple-56 { animation-delay: 0.9s; }
+.ripple-57 { animation-delay: 1.0s; }
+.ripple-58 { animation-delay: 1.1s; }
+.ripple-59 { animation-delay: 1.2s; }
+.ripple-60 { animation-delay: 1.3s; }
+.ripple-61 { animation-delay: 1.4s; }
+.ripple-62 { animation-delay: 1.5s; }
+.ripple-63 { animation-delay: 1.6s; }
+.ripple-64 { animation-delay: 1.7s; }
+.ripple-65 { animation-delay: 1.8s; }
+.ripple-66 { animation-delay: 1.9s; }
+.ripple-67 { animation-delay: 2.0s; }
+.ripple-68 { animation-delay: 2.1s; }
+.ripple-69 { animation-delay: 2.2s; }
+.ripple-70 { animation-delay: 2.3s; }
+.ripple-71 { animation-delay: 2.4s; }
+.ripple-72 { animation-delay: 2.5s; }
+.ripple-73 { animation-delay: 0.3s; }
+.ripple-74 { animation-delay: 0.4s; }
+.ripple-75 { animation-delay: 0.5s; }
+.ripple-76 { animation-delay: 0.6s; }
+.ripple-77 { animation-delay: 0.7s; }
+.ripple-78 { animation-delay: 0.8s; }
+.ripple-79 { animation-delay: 0.9s; }
+.ripple-80 { animation-delay: 1.0s; }
+.ripple-81 { animation-delay: 1.1s; }
+.ripple-82 { animation-delay: 1.2s; }
+.ripple-83 { animation-delay: 1.3s; }
+.ripple-84 { animation-delay: 1.4s; }
+.ripple-85 { animation-delay: 1.5s; }
+.ripple-86 { animation-delay: 1.6s; }
+.ripple-87 { animation-delay: 1.7s; }
+.ripple-88 { animation-delay: 1.8s; }
+.ripple-89 { animation-delay: 1.9s; }
+.ripple-90 { animation-delay: 2.0s; }
+.ripple-91 { animation-delay: 2.1s; }
+.ripple-92 { animation-delay: 2.2s; }
+.ripple-93 { animation-delay: 2.3s; }
+.ripple-94 { animation-delay: 2.4s; }
+.ripple-95 { animation-delay: 2.5s; }
+.ripple-96 { animation-delay: 2.6s; }
+.ripple-97 { animation-delay: 0.4s; }
+.ripple-98 { animation-delay: 0.5s; }
+.ripple-99 { animation-delay: 0.6s; }
+.ripple-100 { animation-delay: 0.7s; }
+.ripple-101 { animation-delay: 0.8s; }
+.ripple-102 { animation-delay: 0.9s; }
+.ripple-103 { animation-delay: 1.0s; }
+.ripple-104 { animation-delay: 1.1s; }
+.ripple-105 { animation-delay: 1.2s; }
+.ripple-106 { animation-delay: 1.3s; }
+.ripple-107 { animation-delay: 1.4s; }
+.ripple-108 { animation-delay: 1.5s; }
+.ripple-109 { animation-delay: 1.6s; }
+.ripple-110 { animation-delay: 1.7s; }
+.ripple-111 { animation-delay: 1.8s; }
+.ripple-112 { animation-delay: 1.9s; }
+.ripple-113 { animation-delay: 2.0s; }
+.ripple-114 { animation-delay: 2.1s; }
+.ripple-115 { animation-delay: 2.2s; }
+.ripple-116 { animation-delay: 2.3s; }
+.ripple-117 { animation-delay: 2.4s; }
+.ripple-118 { animation-delay: 2.5s; }
+.ripple-119 { animation-delay: 2.6s; }
+.ripple-120 { animation-delay: 2.7s; }
+.ripple-121 { animation-delay: 0.5s; }
+.ripple-122 { animation-delay: 0.6s; }
+.ripple-123 { animation-delay: 0.7s; }
+.ripple-124 { animation-delay: 0.8s; }
+.ripple-125 { animation-delay: 0.9s; }
+.ripple-126 { animation-delay: 1.0s; }
+.ripple-127 { animation-delay: 1.1s; }
+.ripple-128 { animation-delay: 1.2s; }
+.ripple-129 { animation-delay: 1.3s; }
+.ripple-130 { animation-delay: 1.4s; }
+.ripple-131 { animation-delay: 1.5s; }
+.ripple-132 { animation-delay: 1.6s; }
+.ripple-133 { animation-delay: 1.7s; }
+.ripple-134 { animation-delay: 1.8s; }
+.ripple-135 { animation-delay: 1.9s; }
+.ripple-136 { animation-delay: 2.0s; }
+.ripple-137 { animation-delay: 2.1s; }
+.ripple-138 { animation-delay: 2.2s; }
+.ripple-139 { animation-delay: 2.3s; }
+.ripple-140 { animation-delay: 2.4s; }
+.ripple-141 { animation-delay: 2.5s; }
+.ripple-142 { animation-delay: 2.6s; }
+.ripple-143 { animation-delay: 2.7s; }
+.ripple-144 { animation-delay: 2.8s; }
+.ripple-145 { animation-delay: 0.6s; }
+.ripple-146 { animation-delay: 0.7s; }
+.ripple-147 { animation-delay: 0.8s; }
+.ripple-148 { animation-delay: 0.9s; }
+.ripple-149 { animation-delay: 1.0s; }
+.ripple-150 { animation-delay: 1.1s; }
+.ripple-151 { animation-delay: 1.2s; }
+.ripple-152 { animation-delay: 1.3s; }
+.ripple-153 { animation-delay: 1.4s; }
+.ripple-154 { animation-delay: 1.5s; }
+.ripple-155 { animation-delay: 1.6s; }
+.ripple-156 { animation-delay: 1.7s; }
+.ripple-157 { animation-delay: 1.8s; }
+.ripple-158 { animation-delay: 1.9s; }
+.ripple-159 { animation-delay: 2.0s; }
+.ripple-160 { animation-delay: 2.1s; }
+.ripple-161 { animation-delay: 2.2s; }
+.ripple-162 { animation-delay: 2.3s; }
+.ripple-163 { animation-delay: 2.4s; }
+.ripple-164 { animation-delay: 2.5s; }
+.ripple-165 { animation-delay: 2.6s; }
+.ripple-166 { animation-delay: 2.7s; }
+.ripple-167 { animation-delay: 2.8s; }
+.ripple-168 { animation-delay: 2.9s; }
+.ripple-169 { animation-delay: 0.7s; }
+.ripple-170 { animation-delay: 0.8s; }
+.ripple-171 { animation-delay: 0.9s; }
+.ripple-172 { animation-delay: 1.0s; }
+.ripple-173 { animation-delay: 1.1s; }
+.ripple-174 { animation-delay: 1.2s; }
+.ripple-175 { animation-delay: 1.3s; }
+.ripple-176 { animation-delay: 1.4s; }
+.ripple-177 { animation-delay: 1.5s; }
+.ripple-178 { animation-delay: 1.6s; }
+.ripple-179 { animation-delay: 1.7s; }
+.ripple-180 { animation-delay: 1.8s; }
+.ripple-181 { animation-delay: 1.9s; }
+.ripple-182 { animation-delay: 2.0s; }
+.ripple-183 { animation-delay: 2.1s; }
+.ripple-184 { animation-delay: 2.2s; }
+.ripple-185 { animation-delay: 2.3s; }
+.ripple-186 { animation-delay: 2.4s; }
+.ripple-187 { animation-delay: 2.5s; }
+.ripple-188 { animation-delay: 2.6s; }
+.ripple-189 { animation-delay: 2.7s; }
+.ripple-190 { animation-delay: 2.8s; }
+.ripple-191 { animation-delay: 2.9s; }
+.ripple-192 { animation-delay: 3.0s; }
+.ripple-193 { animation-delay: 0.8s; }
+.ripple-194 { animation-delay: 0.9s; }
+.ripple-195 { animation-delay: 1.0s; }
+.ripple-196 { animation-delay: 1.1s; }
+.ripple-197 { animation-delay: 1.2s; }
+.ripple-198 { animation-delay: 1.3s; }
+.ripple-199 { animation-delay: 1.4s; }
+.ripple-200 { animation-delay: 1.5s; }
+.ripple-201 { animation-delay: 1.6s; }
+.ripple-202 { animation-delay: 1.7s; }
+.ripple-203 { animation-delay: 1.8s; }
+.ripple-204 { animation-delay: 1.9s; }
+.ripple-205 { animation-delay: 2.0s; }
+.ripple-206 { animation-delay: 2.1s; }
+.ripple-207 { animation-delay: 2.2s; }
+.ripple-208 { animation-delay: 2.3s; }
+.ripple-209 { animation-delay: 2.4s; }
+.ripple-210 { animation-delay: 2.5s; }
+.ripple-211 { animation-delay: 2.6s; }
+.ripple-212 { animation-delay: 2.7s; }
+.ripple-213 { animation-delay: 2.8s; }
+.ripple-214 { animation-delay: 2.9s; }
+.ripple-215 { animation-delay: 3.0s; }
+.ripple-216 { animation-delay: 3.1s; }
+.ripple-217 { animation-delay: 0.9s; }
+.ripple-218 { animation-delay: 1.0s; }
+.ripple-219 { animation-delay: 1.1s; }
+.ripple-220 { animation-delay: 1.2s; }
+.ripple-221 { animation-delay: 1.3s; }
+.ripple-222 { animation-delay: 1.4s; }
+.ripple-223 { animation-delay: 1.5s; }
+.ripple-224 { animation-delay: 1.6s; }
+.ripple-225 { animation-delay: 1.7s; }
+.ripple-226 { animation-delay: 1.8s; }
+.ripple-227 { animation-delay: 1.9s; }
+.ripple-228 { animation-delay: 2.0s; }
+.ripple-229 { animation-delay: 2.1s; }
+.ripple-230 { animation-delay: 2.2s; }
+.ripple-231 { animation-delay: 2.3s; }
+.ripple-232 { animation-delay: 2.4s; }
+.ripple-233 { animation-delay: 2.5s; }
+.ripple-234 { animation-delay: 2.6s; }
+.ripple-235 { animation-delay: 2.7s; }
+.ripple-236 { animation-delay: 2.8s; }
+.ripple-237 { animation-delay: 2.9s; }
+.ripple-238 { animation-delay: 3.0s; }
+.ripple-239 { animation-delay: 3.1s; }
+.ripple-240 { animation-delay: 3.2s; }
+.ripple-241 { animation-delay: 1.0s; }
+.ripple-242 { animation-delay: 1.1s; }
+.ripple-243 { animation-delay: 1.2s; }
+.ripple-244 { animation-delay: 1.3s; }
+.ripple-245 { animation-delay: 1.4s; }
+.ripple-246 { animation-delay: 1.5s; }
+.ripple-247 { animation-delay: 1.6s; }
+.ripple-248 { animation-delay: 1.7s; }
+.ripple-249 { animation-delay: 1.8s; }
+.ripple-250 { animation-delay: 1.9s; }
+.ripple-251 { animation-delay: 2.0s; }
+.ripple-252 { animation-delay: 2.1s; }
+.ripple-253 { animation-delay: 2.2s; }
+.ripple-254 { animation-delay: 2.3s; }
+.ripple-255 { animation-delay: 2.4s; }
+.ripple-256 { animation-delay: 2.5s; }
+.ripple-257 { animation-delay: 2.6s; }
+.ripple-258 { animation-delay: 2.7s; }
+.ripple-259 { animation-delay: 2.8s; }
+.ripple-260 { animation-delay: 2.9s; }
+.ripple-261 { animation-delay: 3.0s; }
+.ripple-262 { animation-delay: 3.1s; }
+.ripple-263 { animation-delay: 3.2s; }
+.ripple-264 { animation-delay: 3.3s; }
+.ripple-265 { animation-delay: 1.1s; }
+.ripple-266 { animation-delay: 1.2s; }
+.ripple-267 { animation-delay: 1.3s; }
+.ripple-268 { animation-delay: 1.4s; }
+.ripple-269 { animation-delay: 1.5s; }
+.ripple-270 { animation-delay: 1.6s; }
+.ripple-271 { animation-delay: 1.7s; }
+.ripple-272 { animation-delay: 1.8s; }
+.ripple-273 { animation-delay: 1.9s; }
+.ripple-274 { animation-delay: 2.0s; }
+.ripple-275 { animation-delay: 2.1s; }
+.ripple-276 { animation-delay: 2.2s; }
+.ripple-277 { animation-delay: 2.3s; }
+.ripple-278 { animation-delay: 2.4s; }
+.ripple-279 { animation-delay: 2.5s; }
+.ripple-280 { animation-delay: 2.6s; }
+.ripple-281 { animation-delay: 2.7s; }
+.ripple-282 { animation-delay: 2.8s; }
+.ripple-283 { animation-delay: 2.9s; }
+.ripple-284 { animation-delay: 3.0s; }
+.ripple-285 { animation-delay: 3.1s; }
+.ripple-286 { animation-delay: 3.2s; }
+.ripple-287 { animation-delay: 3.3s; }
+.ripple-288 { animation-delay: 3.4s; }
+.ripple-289 { animation-delay: 1.2s; }
+.ripple-290 { animation-delay: 1.3s; }
+.ripple-291 { animation-delay: 1.4s; }
+.ripple-292 { animation-delay: 1.5s; }
+.ripple-293 { animation-delay: 1.6s; }
+.ripple-294 { animation-delay: 1.7s; }
+.ripple-295 { animation-delay: 1.8s; }
+.ripple-296 { animation-delay: 1.9s; }
+.ripple-297 { animation-delay: 2.0s; }
+.ripple-298 { animation-delay: 2.1s; }
+.ripple-299 { animation-delay: 2.2s; }
+.ripple-300 { animation-delay: 2.3s; }
+.ripple-301 { animation-delay: 2.4s; }
+.ripple-302 { animation-delay: 2.5s; }
+.ripple-303 { animation-delay: 2.6s; }
+.ripple-304 { animation-delay: 2.7s; }
+.ripple-305 { animation-delay: 2.8s; }
+.ripple-306 { animation-delay: 2.9s; }
+.ripple-307 { animation-delay: 3.0s; }
+.ripple-308 { animation-delay: 3.1s; }
+.ripple-307  { animation-delay: 3.2s; }
+.ripple-308 { animation-delay: 3.3s; }
+.ripple-309 { animation-delay: 3.4s; }
+.ripple-310 { animation-delay: 3.5s; }
+.ripple-311 { animation-delay: 1.3s; }
+.ripple-312 { animation-delay: 1.4s; }
+.ripple-313 { animation-delay: 1.5s; }
+.ripple-314 { animation-delay: 1.6s; }
+.ripple-315 { animation-delay: 1.7s; }
+.ripple-316 { animation-delay: 1.8s; }
+.ripple-317 { animation-delay: 1.9s; }
+.ripple-318 { animation-delay: 2.0s; }
+.ripple-319 { animation-delay: 2.1s; }
+.ripple-320 { animation-delay: 2.2s; }
+.ripple-321 { animation-delay: 2.3s; }
+.ripple-322 { animation-delay: 2.4s; }
+.ripple-323 { animation-delay: 2.5s; }
+.ripple-324 { animation-delay: 2.6s; }
+.ripple-325 { animation-delay: 2.7s; }
+.ripple-326 { animation-delay: 2.8s; }
+.ripple-327 { animation-delay: 2.9s; }
+.ripple-328 { animation-delay: 3.0s; }
+.ripple-329 { animation-delay: 3.1s; }
+.ripple-330 { animation-delay: 3.2s; }
+.ripple-331 { animation-delay: 3.3s; }
+.ripple-332 { animation-delay: 3.4s; }
+.ripple-333 { animation-delay: 3.5s; }
+.ripple-334 { animation-delay: 3.6s; }
+.ripple-335 { animation-delay: 1.4s; }
+.ripple-336 { animation-delay: 1.5s; }
+.ripple-337 { animation-delay: 1.6s; }
+.ripple-338 { animation-delay: 1.7s; }
+.ripple-339 { animation-delay: 1.8s; }
+.ripple-340 { animation-delay: 1.9s; }
+.ripple-341 { animation-delay: 2.0s; }
+.ripple-342 { animation-delay: 2.1s; }
+.ripple-343 { animation-delay: 2.2s; }
+.ripple-344 { animation-delay: 2.3s; }
+.ripple-345 { animation-delay: 2.4s; }
+.ripple-346 { animation-delay: 2.5s; }
+.ripple-347 { animation-delay: 2.6s; }
+.ripple-348 { animation-delay: 2.7s; }
+.ripple-349 { animation-delay: 2.8s; }
+.ripple-350 { animation-delay: 2.9s; }
+.ripple-351 { animation-delay: 3.0s; }
+.ripple-352 { animation-delay: 3.1s; }
+.ripple-353 { animation-delay: 3.2s; }
+.ripple-354 { animation-delay: 3.3s; }
+.ripple-355 { animation-delay: 3.4s; }
+.ripple-356 { animation-delay: 3.5s; }
+.ripple-357 { animation-delay: 3.6s; }
+.ripple-358 { animation-delay: 3.7s; }
+.ripple-359 { animation-delay: 1.5s; }
+.ripple-360 { animation-delay: 1.6s; }
+.ripple-361 { animation-delay: 1.7s; }
+.ripple-362 { animation-delay: 1.8s; }
+.ripple-363 { animation-delay: 1.9s; }
+.ripple-364 { animation-delay: 2.0s; }
+.ripple-365 { animation-delay: 2.1s; }
+.ripple-366 { animation-delay: 2.2s; }
+.ripple-367 { animation-delay: 2.3s; }
+.ripple-368 { animation-delay: 2.4s; }
+.ripple-369 { animation-delay: 2.5s; }
+.ripple-370 { animation-delay: 2.6s; }
+.ripple-371 { animation-delay: 2.7s; }
+.ripple-372 { animation-delay: 2.8s; }
+.ripple-373 { animation-delay: 2.9s; }
+.ripple-374 { animation-delay: 3.0s; }
+.ripple-375 { animation-delay: 3.1s; }
+.ripple-376 { animation-delay: 3.2s; }
+.ripple-377 { animation-delay: 3.3s; }
+.ripple-378 { animation-delay: 3.4s; }
+.ripple-379 { animation-delay: 3.5s; }
+.ripple-380 { animation-delay: 3.6s; }
+
+@keyframes grid-wave {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.1);
+  }
+}
